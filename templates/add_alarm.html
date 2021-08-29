@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Alarm</title>
+</head>
+<body>
+    <h1>アラーム追加</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <p>
+            <label for="time">時間</label>
+            <input type="time" name="time" required>
+        </p>
+        <p>
+            <label for="image">写真</label>
+            <input type="file" accept="image/*" name="image" required>
+        </p>
+        <p>
+            <label for="repeat">繰り返し</label>
+            <select name="repeat" id="repeat">
+                <option value="0" selected>しない</option>
+                <option value="1">毎日曜日</option>
+                <option value="2">毎月曜日</option>
+                <option value="3">毎火曜日</option>
+                <option value="4">毎水曜日</option>
+                <option value="5">毎木曜日</option>
+                <option value="6">毎金曜日</option>
+                <option value="7">毎土曜日</option>
+            </select>
+        </p>
+        <p>
+            <label for="sound">サウンド</label>
+            <select name="sound">
+                <option value="1" selected>サウンド1</option>
+                <option value="2">サウンド2</option>
+                <option value="3">サウンド3</option>
+                <option value="4">サウンド4</option>
+                <option value="5">サウンド5</option>
+                <option value="6">サウンド6</option>
+                <option value="7">サウンド7</option>
+            </select>
+        </p>
+        <p><input type="submit" name="submit" value="追加"></p>
+    </form>
+</body>
+</html>
