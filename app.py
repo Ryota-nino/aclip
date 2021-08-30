@@ -116,5 +116,28 @@ def delete(id):
 #     else: return redirect("/")
 
 
+@app.route('/initial_data')
+# データ初期化用
+def initial():
+    db.session.add(Repeat(repeat_name='毎月曜日'))
+    db.session.add(Repeat(repeat_name='毎火曜日'))
+    db.session.add(Repeat(repeat_name='毎水曜日'))
+    db.session.add(Repeat(repeat_name='毎木曜日'))
+    db.session.add(Repeat(repeat_name='毎金曜日'))
+    db.session.add(Repeat(repeat_name='毎土曜日'))
+    db.session.add(Repeat(repeat_name='毎日曜日'))
+
+    db.session.add(Sound(sound_name='レーダー'))
+    db.session.add(Sound(sound_name='アップリフト'))
+    db.session.add(Sound(sound_name='オープニング'))
+    db.session.add(Sound(sound_name='きらめき'))
+    db.session.add(Sound(sound_name='サーキット'))
+    db.session.add(Sound(sound_name='さざ波'))
+
+    db.session.commit()
+
+    return redirect('/')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
