@@ -77,12 +77,13 @@ def read(id):
 def update(id):
     post = Post.query.get(id)
     repeats = Repeat.query.all()
+    sounds = Sound.query.all()
 
     # 編集ボタンからページにアクセスする場合
     if request.method == 'GET':
         # 編集ページの表示
         repeat_list = [int(x) for x in list(str(post.repeat_id))]
-        return render_template('edit_alarm.html', post=post, repeats=repeats, repeat_list=repeat_list)
+        return render_template('edit_alarm.html', post=post, repeats=repeats, repeat_list=repeat_list, sounds=sounds)
     # 編集ページからアラームを編集して保存する場合
     else:
         # DBに反映

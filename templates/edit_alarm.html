@@ -10,6 +10,7 @@
     <h1>アラーム編集</h1>
     <form action="/" method="POST" enctype="multipart/form-data">
         <p>{{ repeat_list }}</p>
+        <p>{{ post.sound_id }}</p>
         <p>
             <label for="time">時間</label>
             <input type="time" name="time" value="{{ post.time }}" required>
@@ -31,13 +32,20 @@
         <p>
             <label for="sound">サウンド</label>
             <select name="sound">
-                <option value="1" selected>サウンド1</option>
+                <!-- <option value="1" selected>サウンド1</option>
                 <option value="2">サウンド2</option>
                 <option value="3">サウンド3</option>
                 <option value="4">サウンド4</option>
                 <option value="5">サウンド5</option>
                 <option value="6">サウンド6</option>
-                <option value="7">サウンド7</option>
+                <option value="7">サウンド7</option> -->
+                {% for sound in sounds %}
+                {% if sound.id == post.sound_id %}
+                <option value="{{ sound.id }}" selected>{{ sound.sound_name }}</option>
+                {% else %}
+                <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
+                {% endif %}
+                {% endfor %}
             </select>
         </p>
         <p><input type="submit" name="submit" value="追加"></p>
