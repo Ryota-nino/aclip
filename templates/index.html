@@ -11,6 +11,14 @@
     {% for post in posts %}
     <h2>{{ post.time }}</h2>
     <p>{{ post.image }}</p>
+    <p>{{ post.repeat_id }}</p>
+    <p>{{ post.flag }}</p>
+    <a href="edit_alarm/{{ post.id }}" role="button">編集</a>
+    <a href="delete_alarm/{{ post.id }}" role="button">削除</a>
     {% endfor %}
+    {% for repeat in repeats %}
+    <p>{{ repeat.repeat_name }}</p>
+    {% endfor %}
+    <p><a href="add_alarm" role="button">アラーム追加</a></p>
 </body>
 </html>
