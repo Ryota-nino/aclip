@@ -32,13 +32,6 @@
         <p>
             <label for="sound">サウンド</label>
             <select name="sound">
-                <!-- <option value="1" selected>サウンド1</option>
-                <option value="2">サウンド2</option>
-                <option value="3">サウンド3</option>
-                <option value="4">サウンド4</option>
-                <option value="5">サウンド5</option>
-                <option value="6">サウンド6</option>
-                <option value="7">サウンド7</option> -->
                 {% for sound in sounds %}
                 {% if sound.id == post.sound_id %}
                 <option value="{{ sound.id }}" selected>{{ sound.sound_name }}</option>

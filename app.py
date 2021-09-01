@@ -1,10 +1,12 @@
 import os
-import datetime
+import os.path
+import random
+import string
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import defaultload
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./uploads/')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///remi.db'
 db = SQLAlchemy(app)
 
@@ -40,20 +42,31 @@ def index():
         repeat = request.form.getlist('repeat')
         sound = request.form.get('sound')
 
-        # time = datetime.datetime(time, '%H:%M')
         # 写真のアップロード先を指定
-        upload_folder = "./uploads/"
-        image_path = upload_folder + image.filename
-
-        # imageをアップロード
+        upload_dir = "./uploads/"
+        image_path = upload_dir + image.filename
+        # 写真をアップロード
         image.save(image_path)
+
+        # ランダムなファイル名を生成
+        new_filename = ''.join(random.choice(
+            string.ascii_lowercase) for i in range(16))
+
+        # ファイル名を変更したパスを生成
+        ext = ".jpg"
+        new_image_path = upload_dir + new_filename + ext
+
+        # 名前変更
+        image.filename = os.rename(image_path, new_image_path)
 
         # 繰り返しの保存
         str_id = ""
         for repeat_id in repeat:
             str_id = str_id + repeat_id
 
-        new_post = Post(time=time, image=image_path,
+        new_image_path = "." + new_image_path
+
+        new_post = Post(time=time, image=new_image_path,
                         repeat_id=str_id, sound_id=sound)
 
         db.session.add(new_post)
