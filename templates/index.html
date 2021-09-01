@@ -7,14 +7,22 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>アラーム一覧</h1>
+    <h1>ホーム</h1>
     {% for post in posts %}
     <h2>{{ post.time }}</h2>
-    <img src="{{ post.image }}">
-    <p>{{ post.repeat_id }}</p>
-    <p>{{ post.flag }}</p>
-    <a href="edit_alarm/{{ post.id }}" role="button">編集</a>
-    <a href="delete_alarm/{{ post.id }}" role="button">削除</a>
+    <a href="edit_alarm/{{ post.id }}" role="button"><img src="{{ post.image }}"></a>
+    <!-- <p>{{ post.repeat_id }}</p> -->
+    <form>
+        {% if post.flag == True %}
+        <label>
+            <input type="checkbox" name="flag" value="True" checked>オン
+        </label>
+        {% else %}
+        <label>
+            <input type="checkbox" name="flag" value="False">オフ
+        </label>
+    {% endif %}
+    </form>
     {% endfor %}
     <p><a href="add_alarm" role="button">アラーム追加</a></p>
 </body>

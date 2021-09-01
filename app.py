@@ -39,7 +39,7 @@ def index():
     else:
         time = request.form.get('time')
         image = request.files['image']
-        repeat = request.form.getlist('repeat')
+        repeat_list = request.form.getlist('repeat')
         sound = request.form.get('sound')
 
         # 写真のアップロード先を指定
@@ -59,12 +59,14 @@ def index():
         # 名前変更
         image.filename = os.rename(image_path, new_image_path)
 
+        # HTMLから画像を表示できるようにパスの変更
+        new_image_path = "." + new_image_path
+
         # 繰り返しの保存
         str_id = ""
-        for repeat_id in repeat:
-            str_id = str_id + repeat_id
 
-        new_image_path = "." + new_image_path
+        for repeat_id in repeat_list:
+            str_id = str_id + repeat_id
 
         new_post = Post(time=time, image=new_image_path,
                         repeat_id=str_id, sound_id=sound)
@@ -77,6 +79,8 @@ def index():
 
 @app.route('/add_alarm')
 def create():
+    # repeats = Repeat.query.all()
+    # sounds = Sound.query.all()
     return render_template('add_alarm.html')
 
 
@@ -99,11 +103,18 @@ def update(id):
         return render_template('edit_alarm.html', post=post, repeats=repeats, repeat_list=repeat_list, sounds=sounds)
     # 編集ページからアラームを編集して保存する場合
     else:
+        repeat_list = request.form.getlist('repeat')
+
+        # 繰り返しの保存
+        str_id = ""
+        for repeat_id in repeat_list:
+            str_id = str_id + repeat_id
+
         # DBに反映
         post.time = request.form.get('time')
-        post.image = request.form.get('image')
-        post.repeat_id = request.form.get('repeat_id')
-        post.sound_id = request.form.get('sound_id')
+        # post.image = request.files['image']
+        post.repeat_id = str_id
+        post.sound_id = request.form.get('sound')
 
         db.session.commit()
 

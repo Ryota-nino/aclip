@@ -8,17 +8,17 @@
 </head>
 <body>
     <h1>アラーム編集</h1>
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <p>{{ repeat_list }}</p>
-        <p>{{ post.sound_id }}</p>
+    <form action="/edit_alarm/{{ post.id }}" method="POST" enctype="multipart/form-data">
+        <!-- <p>{{ repeat_list }}</p>
+        <p>{{ post.sound_id }}</p> -->
         <p>
             <label for="time">時間</label>
             <input type="time" name="time" value="{{ post.time }}" required>
         </p>
-        <p>
+        <!-- <p>
             <label for="image">写真</label>
             <input type="file" accept="image/*" name="image" required>
-        </p>
+        </p> -->
         <p>
             <label for="repeat">繰り返し</label>
             {% for repeat in repeats %}
@@ -41,7 +41,10 @@
                 {% endfor %}
             </select>
         </p>
-        <p><input type="submit" name="submit" value="追加"></p>
+        <p><input type="submit" name="submit" value="編集"></p>
+    </form>
+    <form action="/delete_alarm/{{ post.id }}">
+        <p><input type="submit" name="submit" value="削除"></p>
     </form>
 </body>
 </html>
