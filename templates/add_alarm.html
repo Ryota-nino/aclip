@@ -13,10 +13,10 @@
             <label for="time">時間</label>
             <input type="time" name="time" required>
         </p>
-        <p>
+        <!-- <p>
             <label for="image">写真</label>
             <input type="file" accept="image/*" name="image" required>
-        </p>
+        </p> -->
         <p>
             <label for="repeat">繰り返し</label>
             {% for repeat in repeats %}
@@ -32,6 +32,7 @@
             </select>
         </p>
         <p><input type="submit" name="submit" value="追加"></p>
+        <input type="hidden" name="image_path" value="{{ image_path }}">
     </form>
 </body>
 </html>

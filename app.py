@@ -37,43 +37,16 @@ def index():
         alarms = Alarm.query.all()
         repeats = Repeat.query.all()
 
-        alarm_data = []
-        num = 0
-
         week_list = {"1": "月", "2": "火", "3": "水",
                      "4": "木", "5": "金", "6": "土", "7": "日"}
-
-        # for alarm in alarms:
-        #     repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
-        #     alarm_data.append(week_list[repeat_list[num]])
-        #     num += 1
 
         return render_template('index.html', alarms=alarms, repeats=repeats, week_list=week_list)
     else:
         time = request.form.get('time')
-        image = request.files['image']
+        app.logger.debug(request.form.get('image'))
+        image_path = '.' + request.form.get('image_path')
         repeat_list = request.form.getlist('repeat')
         sound = request.form.get('sound')
-
-        # 写真のアップロード先を指定
-        upload_dir = "./uploads/"
-        image_path = upload_dir + image.filename
-        # 写真をアップロード
-        image.save(image_path)
-
-        # ランダムなファイル名を生成
-        new_filename = ''.join(random.choice(
-            string.ascii_lowercase) for i in range(16))
-
-        # ファイル名を変更したパスを生成
-        ext = ".jpg"
-        new_image_path = upload_dir + new_filename + ext
-
-        # 名前変更
-        image.filename = os.rename(image_path, new_image_path)
-
-        # HTMLから画像を表示できるようにパスの変更
-        new_image_path = "." + new_image_path
 
         # 繰り返しの保存
         str_id = ""
@@ -81,7 +54,7 @@ def index():
         for repeat_id in repeat_list:
             str_id = str_id + repeat_id
 
-        new_post = Alarm(time=time, image=new_image_path,
+        new_post = Alarm(time=time, image=image_path,
                          repeat_id=str_id, sound_id=sound)
 
         db.session.add(new_post)
@@ -90,11 +63,42 @@ def index():
         return redirect('/')
 
 
-@app.route('/add_alarm')
-def create():
-    repeats = Repeat.query.all()
-    sounds = Sound.query.all()
-    return render_template('add_alarm.html', repeats=repeats, sounds=sounds)
+@app.route('/add_alarm', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        repeats = Repeat.query.all()
+        sounds = Sound.query.all()
+
+        upload_folder = "./uploads/"
+        image = request.files['image']
+        image_path = upload_folder + image.filename
+        image.save(image_path)
+        # ランダムなファイル名を生成
+        new_filename = ''.join(random.choice(
+            string.ascii_lowercase) for i in range(16))
+
+        # ファイル名を変更したパスを生成
+        ext = ".jpg"
+        new_image_path = upload_folder + new_filename + ext
+
+        # 名前変更
+        image.filename = os.rename(image_path, new_image_path)
+
+        # # HTMLから画像を表示できるようにパスの変更
+        # new_image_path = "." + new_image_path
+
+        # 画像解析処理
+        # code...
+        # もし画像解析が成功したらadd_alarm.htmlへ移動
+
+        return render_template('add_alarm.html', image_path=new_image_path, repeats=repeats, sounds=sounds)
+
+
+# @app.route('/add_alarm')
+# def create():
+#     repeats = Repeat.query.all()
+#     sounds = Sound.query.all()
+#     return render_template('add_alarm.html', repeats=repeats, sounds=sounds)
 
 
 # @app.route('/detail_alarm/<int:id>')
@@ -138,20 +142,15 @@ def update(id):
 @app.route('/delete_alarm/<int:id>')
 def delete(id):
     alarm = Alarm.query.get(id)
+    dir_path = './uploads/'
+    file_name = os.path.basename(alarm.image)
+
+    # アラームに設定されてた画像を削除
+    os.remove(dir_path + file_name)
 
     db.session.delete(alarm)
     db.session.commit()
     return redirect('/')
-
-# 写真アップロードだけ別画面でする時用
-# @app.route("/upload/",methods=["POST"])
-# def upload():
-#     if ("file" in request.files): #存在確認
-#         upload_folder = "./uploads/"
-#         file = request.files["file"]
-#         file.save(os.path.join(upload_folder ,file.filename)) #file.filenameでファイル名取得
-#         return redirect("/file/"+file.filename)
-#     else: return redirect("/")
 
 
 @app.route('/change_flag', methods=['POST'])
