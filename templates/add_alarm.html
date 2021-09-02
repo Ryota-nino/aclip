@@ -19,24 +19,16 @@
         </p>
         <p>
             <label for="repeat">繰り返し</label>
-            <label><input type="checkbox" name="repeat" value="1">毎日曜日</label>
-            <label><input type="checkbox" name="repeat" value="2">毎月曜日</label>
-            <label><input type="checkbox" name="repeat" value="3">毎火曜日</label>
-            <label><input type="checkbox" name="repeat" value="4">毎水曜日</label>
-            <label><input type="checkbox" name="repeat" value="5">毎木曜日</label>
-            <label><input type="checkbox" name="repeat" value="6">毎金曜日</label>
-            <label><input type="checkbox" name="repeat" value="7">毎土曜日</label>
+            {% for repeat in repeats %}
+            <label><input type="checkbox" name="repeat" value="{{ repeat.id }}">{{ repeat.repeat_name }}</label>
+            {% endfor %}
         </p>
         <p>
             <label for="sound">サウンド</label>
             <select name="sound">
-                <option value="1" selected>サウンド1</option>
-                <option value="2">サウンド2</option>
-                <option value="3">サウンド3</option>
-                <option value="4">サウンド4</option>
-                <option value="5">サウンド5</option>
-                <option value="6">サウンド6</option>
-                <option value="7">サウンド7</option>
+                {% for sound in sounds %}
+                <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
+                {% endfor %}
             </select>
         </p>
         <p><input type="submit" name="submit" value="追加"></p>
