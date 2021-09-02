@@ -8,12 +8,12 @@
 </head>
 <body>
     <h1>ホーム</h1>
-    {% for post in posts %}
-    <h2>{{ post.time }}</h2>
-    <a href="edit_alarm/{{ post.id }}" role="button"><img src="{{ post.image }}"></a>
-    <!-- <p>{{ post.repeat_id }}</p> -->
+    {% for alarm in alarms %}
+    <h2>{{ alarm.time }}</h2>
+    <a href="edit_alarm/{{ alarm.id }}" role="button"><img src="{{ alarm.image }}"></a>
+    <!-- <p>{{ alarm.repeat_id }}</p> -->
     <form>
-        {% if post.flag == True %}
+        {% if alarm.flag == True %}
         <label>
             <input type="checkbox" name="flag" value="True" checked>オン
         </label>

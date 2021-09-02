@@ -8,12 +8,12 @@
 </head>
 <body>
     <h1>アラーム編集</h1>
-    <form action="/edit_alarm/{{ post.id }}" method="POST" enctype="multipart/form-data">
+    <form action="/edit_alarm/{{ alarm.id }}" method="POST" enctype="multipart/form-data">
         <!-- <p>{{ repeat_list }}</p>
-        <p>{{ post.sound_id }}</p> -->
+        <p>{{ alarm.sound_id }}</p> -->
         <p>
             <label for="time">時間</label>
-            <input type="time" name="time" value="{{ post.time }}" required>
+            <input type="time" name="time" value="{{ alarm.time }}" required>
         </p>
         <!-- <p>
             <label for="image">写真</label>
@@ -33,7 +33,7 @@
             <label for="sound">サウンド</label>
             <select name="sound">
                 {% for sound in sounds %}
-                {% if sound.id == post.sound_id %}
+                {% if sound.id == alarm.sound_id %}
                 <option value="{{ sound.id }}" selected>{{ sound.sound_name }}</option>
                 {% else %}
                 <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
@@ -43,7 +43,7 @@
         </p>
         <p><input type="submit" name="submit" value="編集"></p>
     </form>
-    <form action="/delete_alarm/{{ post.id }}">
+    <form action="/delete_alarm/{{ alarm.id }}">
         <p><input type="submit" name="submit" value="削除"></p>
     </form>
 </body>
