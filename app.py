@@ -36,7 +36,19 @@ def index():
     if request.method == 'GET':
         alarms = Alarm.query.all()
         repeats = Repeat.query.all()
-        return render_template('index.html', alarms=alarms, repeats=repeats)
+
+        alarm_data = []
+        num = 0
+
+        week_list = {"1": "月", "2": "火", "3": "水",
+                     "4": "木", "5": "金", "6": "土", "7": "日"}
+
+        # for alarm in alarms:
+        #     repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
+        #     alarm_data.append(week_list[repeat_list[num]])
+        #     num += 1
+
+        return render_template('index.html', alarms=alarms, repeats=repeats, week_list=week_list)
     else:
         time = request.form.get('time')
         image = request.files['image']
@@ -140,6 +152,25 @@ def delete(id):
 #         file.save(os.path.join(upload_folder ,file.filename)) #file.filenameでファイル名取得
 #         return redirect("/file/"+file.filename)
 #     else: return redirect("/")
+
+
+@app.route('/change_flag', methods=['POST'])
+def change_flag():
+    alarm = Alarm.query.get(request.form['id'])
+
+    app.logger.debug(alarm.flag)
+
+    if request.form['flag'] == 'True':
+        alarm.flag = False
+    else:
+        alarm.flag = True
+
+    # app.logger.debug(alarm.flag)
+    # app.logger.debug(not 0)
+
+    db.session.commit()
+
+    return redirect('/')
 
 
 @app.route('/initial_data')

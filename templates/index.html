@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
     <title>Home</title>
 </head>
 <body>
@@ -11,19 +13,47 @@
     {% for alarm in alarms %}
     <h2>{{ alarm.time }}</h2>
     <a href="edit_alarm/{{ alarm.id }}" role="button"><img src="{{ alarm.image }}"></a>
-    <!-- <p>{{ alarm.repeat_id }}</p> -->
     <form>
         {% if alarm.flag == True %}
         <label>
-            <input type="checkbox" name="flag" value="True" checked>オン
+            <input type="checkbox" id="{{ alarm.id }}" name="flag" value="True" onchange="change_flag(this.value, this.id)" checked>オン
         </label>
         {% else %}
         <label>
-            <input type="checkbox" name="flag" value="False">オフ
+            <input type="checkbox" id="{{ alarm.id }}" name="flag" value="False" onchange="change_flag(this.value, this.id)">オフ
         </label>
-    {% endif %}
+        {% endif %}
     </form>
+    <p>
+        {% if alarm.repeat_id|length == 7 %}
+            毎日
+        {% else %}
+            {% for repeat_id in alarm.repeat_id %}
+                {{ week_list[repeat_id] }}
+            {% endfor %}
+        {% endif %}
+    </p>
     {% endfor %}
     <p><a href="add_alarm" role="button">アラーム追加</a></p>
+    <script>
+        function change_flag(flag, id) {
+            // var flag = document.getElementById("flag")
+            console.log(flag);
+            console.log(id);
+            $.ajax({
+                type: "POST",
+                url: "/change_flag",
+                data: {
+                    id : id,
+                    flag : flag
+                },
+                success: function () {
+                    location.reload();
+                }
+            })
+        };
+        // // イベントハンドラーを対応付ける
+        // document.getElementById("flag").onchange = change_flag;
+    </script>
 </body>
 </html>
