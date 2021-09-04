@@ -6,6 +6,8 @@ from typing import SupportsRound
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import defaultload
+import schedule
+import time
 
 app = Flask(__name__, static_folder='./uploads/')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///remi.db'
@@ -56,6 +58,9 @@ def index():
 
         new_post = Alarm(time=time, image=image_path,
                          repeat_id=str_id, sound_id=sound)
+
+        # アラーム設定
+        schedule.every().day.at(time).do(Alarm)
 
         db.session.add(new_post)
         db.session.commit()
