@@ -9,7 +9,7 @@ import set_alarm
 # set_alarm.pyにschedule.every()とかを格納してこっちで実行する
 
 
-def Alarm():
+def startAlarm():
     print("時間です")
 #   print("\007")  #ビープ音
     # Sound()
@@ -44,7 +44,7 @@ job = schedule.every().day.at("15:06").do(Alarm)
 # job = schedule.every().day.at("15:07").do(Alarm)
 # schedule.cancel_job(job)
 
-set_alarm.setAlarm()
+# set_alarm.setAlarm()
 
 # アラーム待ち
 while True:
