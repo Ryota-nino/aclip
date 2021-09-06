@@ -1,15 +1,24 @@
 import os
 import os.path
+import sys
 import random
 import string
 from typing import SupportsRound
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import defaultload
+import schedule
+import daemon
+import subprocess
+import time
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__, static_folder='./uploads/')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///remi.db'
 db = SQLAlchemy(app)
+
+sched = BackgroundScheduler(daemon=True)
+sched.start()
 
 
 class Alarm(db.Model):
@@ -31,6 +40,121 @@ class Sound(db.Model):
     sound_name = db.Column(db.String, nullable=False)
 
 
+def startAlarm():
+    print('時間です')
+    # redirect('/')
+
+
+def playSound():
+    print('音楽再生')
+
+
+def setAlarm(repeat_list, alarm):
+    time = alarm.time.split(':')
+    for repeat_id in repeat_list:
+        if repeat_id == '1':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='mon', hour=str(time[0]), minute=str(time[1]), id='%s-mon' % alarm.id)
+        elif repeat_id == '2':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='tue', hour=str(time[0]), minute=str(time[1]), id='%s-tue' % alarm.id)
+        elif repeat_id == '3':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='wed', hour=str(time[0]), minute=str(time[1]), id='%s-wed' % alarm.id)
+        elif repeat_id == '4':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='thu', hour=str(time[0]), minute=str(time[1]), id='%s-thu' % alarm.id)
+        elif repeat_id == '5':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='fri', hour=str(time[0]), minute=str(time[1]), id='%s-fri' % alarm.id)
+        elif repeat_id == '6':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='sat', hour=str(time[0]), minute=str(time[1]), id='%s-sat' % alarm.id)
+        elif repeat_id == '7':
+            sched.add_job(startAlarm, 'cron',
+                          day_of_week='sun', hour=str(time[0]), minute=str(time[1]), id='%s-sun' % alarm.id)
+
+
+def rescheduleAlarm(repeat_list, alarm):
+    time = alarm.time.split(':')
+    for repeat_id in repeat_list:
+        if repeat_id == '1':
+            sched.reschedule_job(
+                '%s-mon' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '2':
+            sched.reschedule_job(
+                '%s-tue' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '3':
+            sched.reschedule_job(
+                '%s-wed' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '4':
+            sched.reschedule_job(
+                '%s-thu' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '5':
+            sched.reschedule_job(
+                '%s-fri' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '6':
+            sched.reschedule_job(
+                '%s-sat' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+        elif repeat_id == '7':
+            sched.reschedule_job(
+                '%s-sun' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
+
+
+def removeAlarm(repeat_list, alarm):
+    for repeat_id in repeat_list:
+        if repeat_id == 1:
+            sched.remove_job('%s-mon' % alarm.id)
+        elif repeat_id == 2:
+            sched.remove_job('%s-tue' % alarm.id)
+        elif repeat_id == 3:
+            sched.remove_job('%s-wed' % alarm.id)
+        elif repeat_id == 4:
+            sched.remove_job('%s-thu' % alarm.id)
+        elif repeat_id == 5:
+            sched.remove_job('%s-fri' % alarm.id)
+        elif repeat_id == 6:
+            sched.remove_job('%s-sat' % alarm.id)
+        elif repeat_id == 7:
+            sched.remove_job('%s-sun' % alarm.id)
+
+
+def pauseAlarm(repeat_list, alarm):
+    for repeat_id in repeat_list:
+        if repeat_id == 1:
+            sched.pause_job('%s-mon' % alarm.id)
+        elif repeat_id == 2:
+            sched.pause_job('%s-tue' % alarm.id)
+        elif repeat_id == 3:
+            sched.pause_job('%s-wed' % alarm.id)
+        elif repeat_id == 4:
+            sched.pause_job('%s-thu' % alarm.id)
+        elif repeat_id == 5:
+            sched.pause_job('%s-fri' % alarm.id)
+        elif repeat_id == 6:
+            sched.pause_job('%s-sat' % alarm.id)
+        elif repeat_id == 7:
+            sched.pause_job('%s-sun' % alarm.id)
+
+
+def resumeAlarm(repeat_list, alarm):
+    for repeat_id in repeat_list:
+        if repeat_id == 1:
+            sched.resume_job('%s-mon' % alarm.id)
+        elif repeat_id == 2:
+            sched.resume_job('%s-tue' % alarm.id)
+        elif repeat_id == 3:
+            sched.resume_job('%s-wed' % alarm.id)
+        elif repeat_id == 4:
+            sched.resume_job('%s-thu' % alarm.id)
+        elif repeat_id == 5:
+            sched.resume_job('%s-fri' % alarm.id)
+        elif repeat_id == 6:
+            sched.resume_job('%s-sat' % alarm.id)
+        elif repeat_id == 7:
+            sched.resume_job('%s-sun' % alarm.id)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
@@ -39,6 +163,13 @@ def index():
 
         week_list = {"1": "月", "2": "火", "3": "水",
                      "4": "木", "5": "金", "6": "土", "7": "日"}
+
+        # sched = BackgroundScheduler(daemon=True)
+        # sched.add_job(startAlarm, 'cron',
+        #               day_of_week='mon', hour='1', minute='19')
+        # sched.start()
+        sched = BackgroundScheduler(daemon=True)
+        # setAlarm(sched)
 
         return render_template('index.html', alarms=alarms, repeats=repeats, week_list=week_list)
     else:
@@ -59,6 +190,10 @@ def index():
 
         db.session.add(new_post)
         db.session.commit()
+
+        # アラーム設定
+        alarm = Alarm.query.order_by(Alarm.id.desc()).first()
+        setAlarm(repeat_list=repeat_list, alarm=alarm)
 
         return redirect('/')
 
@@ -94,19 +229,6 @@ def upload():
         return render_template('add_alarm.html', image_path=new_image_path, repeats=repeats, sounds=sounds)
 
 
-# @app.route('/add_alarm')
-# def create():
-#     repeats = Repeat.query.all()
-#     sounds = Sound.query.all()
-#     return render_template('add_alarm.html', repeats=repeats, sounds=sounds)
-
-
-# @app.route('/detail_alarm/<int:id>')
-# def read(id):
-#     alarm = Alarm.query.get(id)
-#     return render_template('edit_alarm.html', alarm=alarm)
-
-
 @app.route('/edit_alarm/<int:id>', methods=['GET', 'POST'])
 def update(id):
     alarm = Alarm.query.get(id)
@@ -133,6 +255,8 @@ def update(id):
         alarm.repeat_id = str_id
         alarm.sound_id = request.form.get('sound')
 
+        rescheduleAlarm(repeat_list=repeat_list, alarm=alarm)
+
         db.session.commit()
 
         # トップページに飛ばす
@@ -142,11 +266,14 @@ def update(id):
 @app.route('/delete_alarm/<int:id>')
 def delete(id):
     alarm = Alarm.query.get(id)
+    repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
     dir_path = './uploads/'
     file_name = os.path.basename(alarm.image)
 
     # アラームに設定されてた画像を削除
     os.remove(dir_path + file_name)
+
+    removeAlarm(repeat_list=repeat_list, alarm=alarm)
 
     db.session.delete(alarm)
     db.session.commit()
@@ -156,16 +283,16 @@ def delete(id):
 @app.route('/change_flag', methods=['POST'])
 def change_flag():
     alarm = Alarm.query.get(request.form['id'])
-
-    app.logger.debug(alarm.flag)
+    repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
 
     if request.form['flag'] == 'True':
         alarm.flag = False
+        # アラーム停止
+        pauseAlarm(repeat_list=repeat_list, alarm=alarm)
     else:
         alarm.flag = True
-
-    # app.logger.debug(alarm.flag)
-    # app.logger.debug(not 0)
+        # アラーム再開
+        resumeAlarm(repeat_list=repeat_list, alarm=alarm)
 
     db.session.commit()
 
