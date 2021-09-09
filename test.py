@@ -1,20 +1,11 @@
-from alarm import Alarm
-import schedule
-import time
+import requests
+import json
 
+# json_data = {"value1": 3}
+# headers = {'Content-Type': 'application/json'}
 
-def startAlarm():
-    print("時間です")
-    Sound()
+# requests.post(
+#     'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh', data=json.dumps(json_data), headers=headers)
 
-
-def Sound():
-    print("音楽再生")
-
-
-schedule.every().monday.at("01:00").do(Alarm)
-schedule.every().tuesday.at("01:00").do(Alarm)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+requests.post(
+    'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')

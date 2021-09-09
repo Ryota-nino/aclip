@@ -3,9 +3,10 @@ import os.path
 import sys
 import cv2
 import random
+import json
 import string
 from typing import SupportsRound
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import defaultload
 import schedule
@@ -44,8 +45,12 @@ class Sound(db.Model):
 
 def startAlarm():
     print('アラーム開始')
+    json_data = {"Value1": 2}
+    headers = {'Content-Type': 'application/json'}
     requests.post(
-        'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+        'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh', data=json.dumps(json_data), headers=headers)
+
+    # session['alarm'] = True
 
     return render_template('stop_alarm.html')
 
@@ -54,6 +59,8 @@ def stopAlarm():
     print('アラーム停止')
     requests.post(
         'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+
+    session.pop('alarm', None)
 
 
 def imgRecognition(cascade_name, image_name):
@@ -337,8 +344,9 @@ def photo():
         result = True
 
         if result == True:
-            requests.post(
-                'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+            # requests.post(
+            #     'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+            stopAlarm()
 
             return redirect('/')
         else:
