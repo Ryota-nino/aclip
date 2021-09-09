@@ -1,6 +1,7 @@
 import os
 import os.path
 import sys
+import cv2
 import random
 import string
 from typing import SupportsRound
@@ -11,6 +12,7 @@ import schedule
 import daemon
 import subprocess
 import time
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__, static_folder='./uploads/')
@@ -41,12 +43,33 @@ class Sound(db.Model):
 
 
 def startAlarm():
-    print('時間です')
-    # redirect('/')
+    print('アラーム開始')
+    requests.post(
+        'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+
+    return render_template('stop_alarm.html')
 
 
-def playSound():
-    print('音楽再生')
+def stopAlarm():
+    print('アラーム停止')
+    requests.post(
+        'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+
+
+def imgRecognition(cascade_name, image_name):
+    XML_PATH = "./data/cascade/" + cascade_name
+    INPUT_IMG_PATH = "./" + image_name
+    # OUTPUT_IMG_PATH = "output.png"
+
+    classifier = cv2.CascadeClassifier(XML_PATH)
+    img = cv2.imread(INPUT_IMG_PATH)
+    color = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    targets = classifier.detectMultiScale(color)
+    for x, y, w, h in targets:
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    # cv2.imwrite(OUTPUT_IMG_PATH, img)
+
+    return True
 
 
 def setAlarm(repeat_list, alarm):
@@ -79,6 +102,7 @@ def rescheduleAlarm(repeat_list, alarm):
     time = alarm.time.split(':')
     for repeat_id in repeat_list:
         if repeat_id == '1':
+            print('enter')
             sched.reschedule_job(
                 '%s-mon' % alarm.id, trigger='cron', hour=str(time[0]), minute=str(time[1]))
         elif repeat_id == '2':
@@ -234,14 +258,17 @@ def update(id):
     alarm = Alarm.query.get(id)
     repeats = Repeat.query.all()
     sounds = Sound.query.all()
+    repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
 
     # 編集ボタンからページにアクセスする場合
     if request.method == 'GET':
         # 編集ページの表示
-        repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
+        # repeat_list = [int(x) for x in list(str(alarm.repeat_id))]
         return render_template('edit_alarm.html', alarm=alarm, repeats=repeats, repeat_list=repeat_list, sounds=sounds)
     # 編集ページからアラームを編集して保存する場合
     else:
+        removeAlarm(repeat_list=repeat_list, alarm=alarm)
+
         repeat_list = request.form.getlist('repeat')
 
         # 繰り返しの保存
@@ -255,7 +282,7 @@ def update(id):
         alarm.repeat_id = str_id
         alarm.sound_id = request.form.get('sound')
 
-        rescheduleAlarm(repeat_list=repeat_list, alarm=alarm)
+        setAlarm(repeat_list=repeat_list, alarm=alarm)
 
         db.session.commit()
 
@@ -297,6 +324,25 @@ def change_flag():
     db.session.commit()
 
     return redirect('/')
+
+
+@app.route('/stop_alarm', methods=['GET', 'POST'])
+def photo():
+    if request.method == 'GET':
+        return render_template('stop_alarm.html')
+    else:
+        image = request.form.get('image')
+
+        # result = imgRecognition()
+        result = True
+
+        if result == True:
+            requests.post(
+                'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
+
+            return redirect('/')
+        else:
+            return redirect('/stop_alarm')
 
 
 @app.route('/initial_data')
