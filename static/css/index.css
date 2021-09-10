@@ -1,0 +1,137 @@
+body {
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: scroll;
+}
+
+main {
+  overflow: scroll;
+  height: 87vh;
+}
+h1 {
+  background-color: #fff;
+  /* border: 1px solid red; */
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 1.2em;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  height: 13vh;
+}
+.Wrapper {
+  margin: 6px;
+}
+.contentsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.content {
+  width: 150px;
+  height: 200px;
+  position: relative;
+  margin: 10px;
+}
+.content.notContent {
+  opacity: 0.3;
+}
+
+.content h2 {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  color: #fff;
+  font-family: Avenir, sans-serif;
+  font-weight: 100;
+  font-size: 20px;
+  margin-left: 8px;
+}
+.content p {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  color: #fff;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.content a {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.content a img {
+  width: 100%;
+  height: 100%;
+}
+.content label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.content .btn {
+  width: 47px;
+  height: 24px;
+  background-color: #05c5ef;
+  border-radius: 12px;
+  padding: 2px;
+  transition: all 0.3s;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+span {
+  margin-left: auto;
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+span.off {
+  margin-left: 0;
+  margin-right: auto;
+}
+input[name="flag"] {
+  display: none;
+}
+input[value="True"] {
+  display: none;
+}
+
+input[type="file"] {
+  display: none;
+}
+#addBtn {
+  position: relative;
+}
+
+.addAlarm {
+  display: block;
+  /* border: 1px solid red; */
+  width: 68px;
+  height: 68px;
+  background-color: #05c5ef;
+  position: fixed;
+  inset: 0;
+  margin: auto auto 30px;
+  bottom: 0;
+  border-radius: 50%;
+}
+.addAlarm span {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 30px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+.addAlarm span:last-child {
+  transform: rotate(90deg);
+}
