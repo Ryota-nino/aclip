@@ -393,7 +393,7 @@ def initial():
     db.session.add(Repeat(repeat_name='毎土曜日'))
     db.session.add(Repeat(repeat_name='毎日曜日'))
 
-    db.session.add(Sound(sound_name='田舎のカエル'))
+    db.session.add(Sound(sound_name='ベル'))
     db.session.add(Sound(sound_name='サイレン'))
     db.session.add(Sound(sound_name='にわとり'))
     db.session.add(Sound(sound_name='ホトトギス'))
