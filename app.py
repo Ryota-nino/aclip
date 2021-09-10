@@ -54,7 +54,7 @@ class Sound(db.Model):
 
 def startAlarm():
     print('アラーム開始')
-    json_data = {"value1": 3}
+    json_data = {"value1": 2}
     headers = {'Content-Type': 'application/json'}
 
     requests.post(
