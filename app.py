@@ -15,10 +15,15 @@ import subprocess
 import time
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import timedelta
 
 app = Flask(__name__, static_folder='./uploads/')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///remi.db'
+app.secret_key = 'alarm'
+app.permanent_session_lifetime = timedelta(days=1)
 db = SQLAlchemy(app)
+
+alarm_flag = False
 
 sched = BackgroundScheduler(daemon=True)
 sched.start()
@@ -43,16 +48,24 @@ class Sound(db.Model):
     sound_name = db.Column(db.String, nullable=False)
 
 
+# def redirectStop():
+#     print('リダイレクトします')
+#     requests.get('http://133.125.52.74:5000/stop_alarm')
+
 def startAlarm():
     print('アラーム開始')
-    json_data = {"Value1": 2}
+    json_data = {"value1": 3}
     headers = {'Content-Type': 'application/json'}
+
     requests.post(
         'https://maker.ifttt.com/trigger/start_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh', data=json.dumps(json_data), headers=headers)
 
+    global alarm_flag
+    alarm_flag = True
     # session['alarm'] = True
-
-    return render_template('stop_alarm.html')
+    # redirectStop()
+    # return redirect('/stop_alarm')
+    # return render_template('stop_alarm.html')
 
 
 def stopAlarm():
@@ -60,23 +73,30 @@ def stopAlarm():
     requests.post(
         'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
 
-    session.pop('alarm', None)
+    # session.pop('alarm', None)
 
 
 def imgRecognition(cascade_name, image_name):
+    result = False
     XML_PATH = "./data/cascade/" + cascade_name
     INPUT_IMG_PATH = "./" + image_name
-    # OUTPUT_IMG_PATH = "output.png"
+    OUTPUT_IMG_PATH = "output.jpg"
 
     classifier = cv2.CascadeClassifier(XML_PATH)
     img = cv2.imread(INPUT_IMG_PATH)
     color = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     targets = classifier.detectMultiScale(color)
+
     for x, y, w, h in targets:
+        if result == False:
+            result = True
         cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+    print(targets)
     # cv2.imwrite(OUTPUT_IMG_PATH, img)
 
-    return True
+    
+    return result
 
 
 def setAlarm(repeat_list, alarm):
@@ -189,6 +209,9 @@ def resumeAlarm(repeat_list, alarm):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
+        if alarm_flag == True:
+            return redirect('/stop_alarm')
+
         alarms = Alarm.query.all()
         repeats = Repeat.query.all()
 
@@ -335,18 +358,24 @@ def change_flag():
 
 @app.route('/stop_alarm', methods=['GET', 'POST'])
 def photo():
+    global alarm_flag
     if request.method == 'GET':
         return render_template('stop_alarm.html')
     else:
-        image = request.form.get('image')
+        # image = request.form.get('image')
+        upload_folder = "./"
+        image = request.files['image']
+        image_path = upload_folder + image.filename
+        image.save(image_path)
 
-        # result = imgRecognition()
-        result = True
+        result = imgRecognition('cascade.xml', image.filename)
+        # result = True
 
         if result == True:
             # requests.post(
             #     'https://maker.ifttt.com/trigger/stop_alarm/with/key/ehsWG5yTpSDi6wmh7X20wWEiEWk4FoMLocB2hc1eLOh')
             stopAlarm()
+            alarm_flag = False
 
             return redirect('/')
         else:
@@ -379,4 +408,4 @@ def initial():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
