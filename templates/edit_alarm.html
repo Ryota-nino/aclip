@@ -1,103 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link
-      rel="stylesheet"
-      href="http://127.0.0.1:5500/static/css/edit_alarm.css"
-    />
-    <link rel="stylesheet" href="http://127.0.0.1:5500/static/css/ress.css" />
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Alarm</title>
-  </head>
-  <body>
-    <h1>アラーム編集</h1>
-    <form
-      action="/edit_alarm/{{ alarm.id }}"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      <!-- <p>{{ repeat_list }}</p>
+
+<head>
+  <link rel="stylesheet" href="http://133.125.52.74:5000/static/css/edit_alarm.css" />
+  <link rel="stylesheet" href="http://133.125.52.74:5000/static/css/ress.css" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Alarm</title>
+</head>
+
+<body>
+  <h1>アラーム編集</h1>
+  <form action="/edit_alarm/{{ alarm.id }}" method="POST" enctype="multipart/form-data">
+    <!-- <p>{{ repeat_list }}</p>
         <p>{{ alarm.sound_id }}</p> -->
-      <p class="time">
-        <label for="time">時間</label>
-        <input type="time" name="time" value="{{ alarm.time }}" required />
-      </p>
-      <!-- <p>
+    <p class="time">
+      <label for="time">時間</label>
+      <input type="time" name="time" value="{{ alarm.time }}" required />
+    </p>
+    <!-- <p>
             <label for="image">写真</label>
             <input type="file" accept="image/*" name="image" required>
         </p> -->
-      <div class="infoWrap">
-        <div class="repeatWrap">
-          <div class="repeat">
-            <label for="repeat">繰り返し</label>
-            <div class="dayWrap">
-              {% for repeat in repeats %}
-              <div class="day">
-                {% if repeat.id in repeat_list %}
-                <label
-                  ><input
-                    type="checkbox"
-                    class="btn"
-                    name="repeat"
-                    value="{{ repeat.id }}"
-                    checked
-                  />{{ repeat.repeat_name }}</label
-                >
-                {% else %}
-                <label
-                  ><input
-                    type="checkbox"
-                    class="btn"
-                    name="repeat"
-                    value="{{ repeat.id }}"
-                  />{{ repeat.repeat_name }}</label
-                >
-            
-                {% endif %} </div> {% endfor %}
-              </div>
-            </div>
-          </div>
-       
+    <div class="infoWrap">
+      <div class="repeatWrap">
+        <div class="repeat">
+          <label for="repeat">繰り返し</label>
+          <div class="dayWrap">
+            {% for repeat in repeats %}
+            <div class="day">
+              {% if repeat.id in repeat_list %}
+              <label><input type="checkbox" class="btn" name="repeat" value="{{ repeat.id }}" checked />{{
+                repeat.repeat_name }}</label>
+              {% else %}
+              <label><input type="checkbox" class="btn" name="repeat" value="{{ repeat.id }}" />{{ repeat.repeat_name
+                }}</label>
 
-        <p class="sound">
-          <label for="sound">サウンド</label>
-          <select name="sound">
-            {% for sound in sounds %} {% if sound.id == alarm.sound_id %}
-            <option value="{{ sound.id }}" selected>
-              {{ sound.sound_name }}
-            </option>
-            {% else %}
-            <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
-            {% endif %} {% endfor %}
-          </select>
-        </p>
-
-        <div class="alarm-sound-bar">
-          <div class="alarm-sound-bar-box">
-            <p>
-              <img
-                src="http://127.0.0.1:5500/static/img/speaker.svg"
-                alt="音量"
-              />
-            </p>
-            <input
-              class="sound-range"
-              type="range"
-              min="0"
-              max="100"
-              value="20"
-            />
+              {% endif %}
+            </div> {% endfor %}
           </div>
         </div>
       </div>
+
+
+      <p class="sound">
+        <label for="sound">サウンド</label>
+        <select name="sound">
+          {% for sound in sounds %} {% if sound.id == alarm.sound_id %}
+          <option value="{{ sound.id }}" selected>
+            {{ sound.sound_name }}
+          </option>
+          {% else %}
+          <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
+          {% endif %} {% endfor %}
+        </select>
+      </p>
+
+      <div class="alarm-sound-bar">
+        <div class="alarm-sound-bar-box">
+          <p>
+            <img src="http://133.125.52.74:5000/static/img/speaker.svg" alt="音量" />
+          </p>
+          <input class="sound-range" type="range" min="0" max="100" value="20" />
+        </div>
+      </div>
     </div>
-      <p class="add"><input type="submit" name="submit" value="編集" /></p>
-    </form>
-    <form action="/delete_alarm/{{ alarm.id }}">
-      <p class="remove"><input type="submit" name="submit" value="アラームを消去する" /></p>
-    </form>
-    <!-- <script src="http://127.0.0.1:5500/static/js/add_alarm.js"></script> -->
-  </body>
+    </div>
+    <p class="add"><input type="submit" name="submit" value="編集" /></p>
+  </form>
+  <form action="/delete_alarm/{{ alarm.id }}">
+    <p class="remove"><input type="submit" name="submit" value="アラームを消去する" /></p>
+  </form>
+  <!-- <script src="http://127.0.0.1:5500/static/js/add_alarm.js"></script> -->
+</body>
+
 </html>

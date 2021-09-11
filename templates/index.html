@@ -1,106 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="http://127.0.0.1:5500/static/css/index.css" />
-    <link rel="stylesheet" href="http://127.0.0.1:5500/static/css/ress.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
 
-    <title>Home</title>
-  </head>
-  <body>
-    <p></p>
-    <header>
-      <h1>ホーム</h1>
-    </header>
-    <main>
-      <div class="Wrapper">
-        <div class="contentsWrap">
-          {% for alarm in alarms %}
-          <div class="content">
-            <h2>{{ alarm.time }}</h2>
-            <a href="/edit_alarm/{{ alarm.id }}" role="button"
-              ><img src="{{ alarm.image }}"
-            /></a>
-            <form>
-              {% if alarm.flag == True %}
-              <label>
-                <input
-                  type="checkbox"
-                  id="{{ alarm.id }}"
-                  name="flag"
-                  value="True"
-                  onchange="change_flag(this.value, this.id)"
-                  checked
-                />
-                <label for="{{ alarm.id }}" class="btn"><span>on</span></label>
-              </label>
-              {% else %}
-              <label>
-                <input
-                  type="checkbox"
-                  id="{{ alarm.id }}"
-                  name="flag"
-                  value="False"
-                  onchange="change_flag(this.value, this.id)"
-                />
-                <label for="{{ alarm.id }}" class="btn"
-                  ><span class="off">off</span></label
-                >
-              </label>
-              {% endif %}
-            </form>
-            <p>
-              {% if alarm.repeat_id|length == 7 %} 毎日 {% else %} {% for
-              repeat_id in alarm.repeat_id %} {{ week_list[repeat_id] }} {%
-              endfor %} {% endif %}
-            </p>
-          </div>
-          {% endfor %}
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="stylesheet" href="http://133.125.52.74:5500/static/css/index.css" />
+  <link rel="stylesheet" href="http://133.125.52.74:5500/static/css/ress.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+
+  <title>Home</title>
+</head>
+
+<body>
+  <p></p>
+  <header>
+    <h1>ホーム</h1>
+  </header>
+  <main>
+    <div class="Wrapper">
+      <div class="contentsWrap">
+        {% for alarm in alarms %}
+        <div class="content">
+          <h2>{{ alarm.time }}</h2>
+          <a href="/edit_alarm/{{ alarm.id }}" role="button"><img src="{{ alarm.image }}" /></a>
+          <form>
+            {% if alarm.flag == True %}
+            <label>
+              <input type="checkbox" id="{{ alarm.id }}" name="flag" value="True"
+                onchange="change_flag(this.value, this.id)" checked />
+              <label for="{{ alarm.id }}" class="btn"><span>on</span></label>
+            </label>
+            {% else %}
+            <label>
+              <input type="checkbox" id="{{ alarm.id }}" name="flag" value="False"
+                onchange="change_flag(this.value, this.id)" />
+              <label for="{{ alarm.id }}" class="btn"><span class="off">off</span></label>
+            </label>
+            {% endif %}
+          </form>
+          <p>
+            {% if alarm.repeat_id|length == 7 %} 毎日 {% else %} {% for
+            repeat_id in alarm.repeat_id %} {{ week_list[repeat_id] }} {%
+            endfor %} {% endif %}
+          </p>
         </div>
+        {% endfor %}
       </div>
+    </div>
 
-      <form
-        id="addBtn"
-        action="/add_alarm"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <input
-          id="addAlarm"
-          type="file"
-          accept="image/*"
-          name="image"
-          capture="camera"
-          onchange="this.form.submit()"
-        />
-        <label for="addAlarm" class="addAlarm"
-          ><span></span><span></span
-        ></label>
-      </form>
-    </main>
+    <form id="addBtn" action="/add_alarm" method="POST" enctype="multipart/form-data">
+      <input id="addAlarm" type="file" accept="image/*" name="image" capture="camera" onchange="this.form.submit()" />
+      <label for="addAlarm" class="addAlarm"><span></span><span></span></label>
+    </form>
+  </main>
 
-    <script>
-      function change_flag(flag, id) {
-        // var flag = document.getElementById("flag")
-        console.log(flag);
-        console.log(id);
-        $.ajax({
-          type: "POST",
-          url: "/change_flag",
-          data: {
-            id: id,
-            flag: flag,
-          },
-          success: function () {
-            location.reload();
-          },
-        });
-      }
-    </script>
-    <script src="http://127.0.0.1:5500/static/js/index.js"></script>
-  </body>
+  <script>
+    function change_flag(flag, id) {
+      // var flag = document.getElementById("flag")
+      console.log(flag);
+      console.log(id);
+      $.ajax({
+        type: "POST",
+        url: "/change_flag",
+        data: {
+          id: id,
+          flag: flag,
+        },
+        success: function () {
+          location.reload();
+        },
+      });
+    }
+  </script>
+  <script src="http://133.125.52.74:5500/static/js/index.js"></script>
+</body>
+
 </html>
