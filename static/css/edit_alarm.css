@@ -1,0 +1,138 @@
+h1 {
+  background-color: #fff;
+  /* border: 1px solid red; */
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 1.2em;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  height: 13vh;
+}
+
+body {
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.time {
+  margin: 0 auto;
+  margin-top: 40px;
+}
+.time label {
+  display: block;
+  /* border: 1px solid red; */
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+input[type="time"] {
+  display: block;
+  text-align: center;
+  padding: 16px 0;
+  padding-left: 40px;
+  font-size: 28px;
+  /* border: 1px solid red; */
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 80%;
+}
+.infoWrap {
+  position: absolute;
+  bottom: 80px;
+  padding: 30px;
+  margin-top: 60px;
+  background-color: #fff;
+  width: 100vw;
+}
+
+.repeatWrap {
+  border-bottom: 1px solid #aaa;
+}
+.repeat {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+.repeat label {
+  display: block;
+}
+.repeat > label {
+  width: 80px;
+}
+.dayWrap {
+  margin-left: 100px;
+}
+
+.dayWrap label {
+  font-size: 16px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.sound {
+  margin-top: 20px;
+}
+.sound select {
+  margin-left: 70px;
+}
+
+.alarm-sound-bar {
+  width: 100%;
+  margin-top: 38px;
+}
+
+.alarm-sound-bar-box {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.alarm-sound-bar-box p {
+  margin-right: 8px;
+}
+
+.sound-range {
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 285px;
+  height: 4px;
+  outline: none;
+  border-radius: 2px;
+  background-color: #05c5ef;
+}
+
+.sound-range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0px 0.5px 4px rgba(0, 0, 0, 0.12),
+    0px 6px 13px rgba(0, 0, 0, 0.12);
+  border: none;
+}
+
+.add {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  color: #05c5ef;
+  font-size: 18px;
+  padding-top: 40px;
+}
+
+.remove {
+  display: block;
+  width: 100%;
+  position: absolute;
+  bottom: 16px;
+  background-color: #fff;
+  color: red;
+  text-align: center;
+  padding: 14px 0;
+}

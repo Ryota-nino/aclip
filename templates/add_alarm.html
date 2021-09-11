@@ -1,38 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Alarm</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="http://133.125.52.74:5000/static/css/add_alarm.css" />
+  <link rel="stylesheet" href="http://133.125.52.74:5000/static/css/ress.css" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Alarm</title>
 </head>
+
 <body>
-    <h1>アラーム追加</h1>
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <p>
-            <label for="time">時間</label>
-            <input type="time" name="time" required>
-        </p>
-        <!-- <p>
+  <h1>アラーム追加</h1>
+
+  <form action="/" method="POST" enctype="multipart/form-data">
+    <p class="time">
+      <label for="time">時間</label>
+      <input type="time" name="time" required />
+    </p>
+    <!-- <p>
             <label for="image">写真</label>
             <input type="file" accept="image/*" name="image" required>
         </p> -->
-        <p>
-            <label for="repeat">繰り返し</label>
+    <div class="infoWrap">
+      <div class="repeatWrap">
+        <div class="repeat">
+          <label for="repeat">繰り返し</label>
+          <div class="dayWrap">
             {% for repeat in repeats %}
-            <label><input type="checkbox" name="repeat" value="{{ repeat.id }}">{{ repeat.repeat_name }}</label>
+            <div class="day">
+              <label>
+                <input type="checkbox" class="btn" name="repeat" value="{{ repeat.id }}" />{{ repeat.repeat_name }}
+              </label>
+
+              <label for="btn" class="repeatBtn"><span></span><span></span></label>
+            </div>
             {% endfor %}
-        </p>
-        <p>
-            <label for="sound">サウンド</label>
-            <select name="sound">
-                {% for sound in sounds %}
-                <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
-                {% endfor %}
-            </select>
-        </p>
-        <p><input type="submit" name="submit" value="追加"></p>
-        <input type="hidden" name="image_path" value="{{ image_path }}">
-    </form>
+          </div>
+        </div>
+      </div>
+      <p class="sound">
+        <label for="sound">サウンド</label>
+        <select name="sound">
+          {% for sound in sounds %}
+          <option value="{{ sound.id }}">{{ sound.sound_name }}</option>
+          {% endfor %}
+        </select>
+      </p>
+      <div class="alarm-sound-bar">
+        <div class="alarm-sound-bar-box">
+          <p>
+            <img src="http://133.125.52.74:5000/static/img/speaker.svg" alt="音量" />
+          </p>
+          <input class="sound-range" type="range" min="0" max="100" value="20" />
+        </div>
+      </div>
+    </div>
+    <p class="add"><input type="submit" name="submit" value="保存" /></p>
+    <input type="hidden" name="image_path" value="{{ image_path }}" />
+  </form>
+  <script src="http://133.125.52.74:5000/static/js/add_alarm.js"></script>
 </body>
+
 </html>
